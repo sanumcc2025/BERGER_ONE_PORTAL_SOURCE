@@ -233,10 +233,16 @@ const TLVRevisionRequestDetails = () => {
         setLoading(false);
     };
 
-    const convertToBase64 = (value: Blob, typeName: string) => {
+    const convertToBase64 = (value: Blob, typeName: string, fileInput?: HTMLInputElement) => {
         if (value) {
+            if (!(value.type && value.type.startsWith('image/'))) {
+                commonErrorToast('Please select only image files (e.g. JPEG, PNG, GIF).');
+                if (fileInput) fileInput.value = '';
+                return;
+            }
             if (value.size > 300000) {
                 commonErrorToast(`${typeName} file too large!`);
+                if (fileInput) fileInput.value = '';
                 return;
             }
             const reader = new FileReader();
@@ -257,7 +263,7 @@ const TLVRevisionRequestDetails = () => {
         }
     };
     const imageChange = (event: any, flag: 'TLV DOC' | 'AADHAR DOC' | 'PAN DOC' | 'LC/BG DOC' | 'CHEQUE DOC' | 'LCBG DOC') => {
-        convertToBase64(event.target.files[0], flag);
+        convertToBase64(event.target.files[0], flag, event.target);
     };
 
     const handleDownload = (event: React.MouseEvent<HTMLButtonElement>, fileUrl: string) => {
@@ -501,10 +507,10 @@ const TLVRevisionRequestDetails = () => {
                             <label className="formLabelTx">Upload relevant document as proof of increase in TLV:</label>
                             <input
                                 type="file"
-                                onChange={() => {
+                                onChange={(event) => {
                                     imageChange(event, 'TLV DOC');
                                 }}
-                                accept="image/*"
+                                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
                             />
                         </div>
 
@@ -595,10 +601,10 @@ const TLVRevisionRequestDetails = () => {
                                                     <input
                                                         // className="w-full border rounded form-input text-sm"
                                                         type="file"
-                                                        onChange={() => {
+                                                        onChange={(event) => {
                                                             imageChange(event, 'AADHAR DOC');
                                                         }}
-                                                        accept="image/*"
+                                                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
                                                     />
                                                 </div>
 
@@ -666,10 +672,10 @@ const TLVRevisionRequestDetails = () => {
                                                     <input
                                                         // className="fileTypeInput form-input"
                                                         type="file"
-                                                        onChange={() => {
+                                                        onChange={(event) => {
                                                             imageChange(event, 'PAN DOC');
                                                         }}
-                                                        accept="image/*"
+                                                        accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
                                                     />
                                                 </div>
 
@@ -766,10 +772,10 @@ const TLVRevisionRequestDetails = () => {
                                                                 <input
                                                                     // className="fileTypeInput form-input"
                                                                     type="file"
-                                                                    onChange={() => {
+                                                                    onChange={(event) => {
                                                                         imageChange(event, 'LCBG DOC');
                                                                     }}
-                                                                    accept="image/*"
+                                                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
                                                                 />
                                                             </div>
 
@@ -869,7 +875,7 @@ const TLVRevisionRequestDetails = () => {
                                                                     onChange={(event) => {
                                                                         imageChange(event, 'CHEQUE DOC');
                                                                     }}
-                                                                    accept="image/*"
+                                                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
                                                                 />
                                                             </div>
 
